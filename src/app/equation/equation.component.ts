@@ -9,6 +9,7 @@ import { MathValidators } from '../math-validators';
   styleUrls: ['./equation.component.css'],
 })
 export class EquationComponent implements OnInit {
+  secondsPerSolution = 0;
   mathForm = new FormGroup(
     {
       a: new FormControl(this.randomNumber()),
@@ -38,6 +39,8 @@ export class EquationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const startTime = new Date();
+    let numberSolved = 0;
     // console.log(this.mathForm.statusChanges);
     this.mathForm.statusChanges
       .pipe(
@@ -49,6 +52,7 @@ export class EquationComponent implements OnInit {
         // if (value === 'INVALID') {
         //   return;//Filter insted
         // }
+        //
         // this.mathForm.controls.a.setValue(this.randomNumber());
         // this.mathForm.controls.b.setValue(this.randomNumber());
         // this.mathForm.controls.answer.setValue('');
@@ -58,6 +62,10 @@ export class EquationComponent implements OnInit {
         //   answer: '',
         // });
         //OR setValue can be modify all the atributs toggether
+        //Before RXjs
+        numberSolved++;
+        this.secondsPerSolution =
+          (new Date().getTime() - startTime.getTime()) / numberSolved / 1000;
         this.mathForm.setValue({
           a: this.randomNumber(),
           b: this.randomNumber(),

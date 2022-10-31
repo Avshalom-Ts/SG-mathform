@@ -7,6 +7,9 @@
   <input formControlName="answer">
 </form>
 
+{{secondsPerSolution | number:'1.1-3'}}
+<!-- {{numberSolved}} -->
+<hr>
 <div>Form is Valid : {{mathForm.valid}} </div>
 <div>Form is Values : {{mathForm.value | json}} </div>
 <div>Form is errors : {{mathForm.errors | json}} </div>
