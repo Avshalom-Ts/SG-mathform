@@ -1,15 +1,67 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { delay } from 'rxjs';
+import { MathValidators } from '../math-validators';
 
 @Component({
   selector: 'app-equation',
   templateUrl: './equation.component.html',
-  styleUrls: ['./equation.component.css']
+  styleUrls: ['./equation.component.css'],
 })
 export class EquationComponent implements OnInit {
+  mathForm = new FormGroup(
+    {
+      a: new FormControl(this.randomNumber()),
+      b: new FormControl(this.randomNumber()),
+      answer: new FormControl(''),
+    },
+    [
+      // console.log(form.value);
+      // (form: AbstractControl) => {
+      //   // console.log(form.value);
+      //   const { a, b, answer } = form.value;
+      //   if (a + b === parseInt(answer)) {
+      //     return null;
+      //   }
+      //   return { addition: true };
+      // },
+      MathValidators.addition('answer', 'a', 'b'),
+    ]
+  );
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
+  get a() {
+    return this.mathForm.value.a;
+  }
+  get b() {
+    return this.mathForm.value.b;
   }
 
+  ngOnInit(): void {
+    // console.log(this.mathForm.statusChanges);
+    this.mathForm.statusChanges.pipe(delay(1000)).subscribe((value) => {
+      // console.log(value);
+      if (value === 'INVALID') {
+        return;
+      }
+      // this.mathForm.controls.a.setValue(this.randomNumber());
+      // this.mathForm.controls.b.setValue(this.randomNumber());
+      // this.mathForm.controls.answer.setValue('');
+      //OR patchValue can be modify part of the atributs
+      // this.mathForm.patchValue({
+      //   b: this.randomNumber(),
+      //   answer: '',
+      // });
+      //OR setValue can be modify all the atributs toggether
+      this.mathForm.setValue({
+        a: this.randomNumber(),
+        b: this.randomNumber(),
+        answer: '',
+      });
+    });
+  }
+
+  randomNumber() {
+    return Math.floor(Math.random() * 100);
+  }
 }

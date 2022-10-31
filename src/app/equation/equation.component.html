@@ -1,1 +1,12 @@
-<p>equation works!</p>
+<form [formGroup]="mathForm">
+  <!-- {{mathForm.get('a')?.value}} -->
+  <!-- {{mathForm.controls.a.value}} -->
+  <!-- {{mathForm.value.a}} + {{mathForm.get('b')?.value}} = -->
+  <!-- From the get a func -->
+  {{a}} + {{b}} =
+  <input formControlName="answer">
+</form>
+
+<div>Form is Valid : {{mathForm.valid}} </div>
+<div>Form is Values : {{mathForm.value | json}} </div>
+<div>Form is errors : {{mathForm.errors | json}} </div>
