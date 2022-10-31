@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { delay } from 'rxjs';
+import { delay, filter } from 'rxjs';
 import { MathValidators } from '../math-validators';
 
 @Component({
@@ -39,26 +39,31 @@ export class EquationComponent implements OnInit {
 
   ngOnInit(): void {
     // console.log(this.mathForm.statusChanges);
-    this.mathForm.statusChanges.pipe(delay(1000)).subscribe((value) => {
-      // console.log(value);
-      if (value === 'INVALID') {
-        return;
-      }
-      // this.mathForm.controls.a.setValue(this.randomNumber());
-      // this.mathForm.controls.b.setValue(this.randomNumber());
-      // this.mathForm.controls.answer.setValue('');
-      //OR patchValue can be modify part of the atributs
-      // this.mathForm.patchValue({
-      //   b: this.randomNumber(),
-      //   answer: '',
-      // });
-      //OR setValue can be modify all the atributs toggether
-      this.mathForm.setValue({
-        a: this.randomNumber(),
-        b: this.randomNumber(),
-        answer: '',
+    this.mathForm.statusChanges
+      .pipe(
+        filter((value) => value === 'VALID'),
+        delay(1000)
+      )
+      .subscribe((value) => {
+        // console.log(value);
+        // if (value === 'INVALID') {
+        //   return;//Filter insted
+        // }
+        // this.mathForm.controls.a.setValue(this.randomNumber());
+        // this.mathForm.controls.b.setValue(this.randomNumber());
+        // this.mathForm.controls.answer.setValue('');
+        //OR patchValue can be modify part of the atributs
+        // this.mathForm.patchValue({
+        //   b: this.randomNumber(),
+        //   answer: '',
+        // });
+        //OR setValue can be modify all the atributs toggether
+        this.mathForm.setValue({
+          a: this.randomNumber(),
+          b: this.randomNumber(),
+          answer: '',
+        });
       });
-    });
   }
 
   randomNumber() {
