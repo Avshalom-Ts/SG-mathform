@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { delay, filter } from 'rxjs';
+import { delay, filter, scan } from 'rxjs';
 import { MathValidators } from '../math-validators';
 
 @Component({
@@ -39,15 +39,24 @@ export class EquationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const startTime = new Date();
-    let numberSolved = 0;
+    // const startTime = new Date();
+    // let numberSolved = 0;
     // console.log(this.mathForm.statusChanges);
     this.mathForm.statusChanges
       .pipe(
         filter((value) => value === 'VALID'),
-        delay(1000)
+        delay(1000),
+        scan(
+          (acc, value) => {
+            return {
+              numberSolved: acc.numberSolved + 1,
+              startTime: acc.startTime,
+            };
+          },
+          { numberSolved: 0, startTime: new Date() }
+        )
       )
-      .subscribe((value) => {
+      .subscribe(({ numberSolved, startTime }) => {
         // console.log(value);
         // if (value === 'INVALID') {
         //   return;//Filter insted
@@ -63,7 +72,7 @@ export class EquationComponent implements OnInit {
         // });
         //OR setValue can be modify all the atributs toggether
         //Before RXjs
-        numberSolved++;
+        // numberSolved++;
         this.secondsPerSolution =
           (new Date().getTime() - startTime.getTime()) / numberSolved / 1000;
         this.mathForm.setValue({
